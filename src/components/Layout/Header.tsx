@@ -63,10 +63,10 @@ export function Header({ user, cartCount }: HeaderProps) {
 
   const dashboardLink =
     user?.role === Role.admin
-      ? "/dashboard/admin"
+      ? "/admin-dashboard"
       : user?.role === Role.seller
-        ? "/dashboard/seller"
-        : "/dashboard/customer";
+        ? "/seller-dashboard"
+        : "/dashboard";
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
