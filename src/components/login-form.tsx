@@ -35,8 +35,8 @@ export function LoginForm({
   const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      email: "hostproxy55@gmail.com",
+      password: "password1234",
     },
   });
 
@@ -50,7 +50,7 @@ export function LoginForm({
       });
 
       toast.success("Welcome back!");
-      router.refresh();
+      router.push('/')
     } catch (error: any) {
       toast.error(error?.message || "Invalid email or password");
     }
