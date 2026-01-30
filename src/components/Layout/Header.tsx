@@ -184,10 +184,10 @@ export function Header() {
           ) : (
             <div className="hidden gap-2 sm:flex">
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/login">Sign In</Link>
+                <Link href="/sign-in">Sign In</Link>
               </Button>
               <Button size="sm" asChild>
-                <Link href="/register">Get Started</Link>
+                <Link href="/sign-up">Get Started</Link>
               </Button>
             </div>
           )}
