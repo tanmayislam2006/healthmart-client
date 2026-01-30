@@ -58,6 +58,7 @@ export default function Home() {
           >
             Documentation
           </a>
+          <p className="text-primary">Hello World</p>
         </div>
       </main>
     </div>
