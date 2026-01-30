@@ -17,7 +17,7 @@ import Link from "next/link"
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   return (
-    <Card {...props}>
+    <Card className="w-md" {...props}>
       <CardHeader>
         <CardTitle>Create an account</CardTitle>
         <CardDescription>
@@ -39,10 +39,6 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                 placeholder="m@example.com"
                 required
               />
-              <FieldDescription>
-                We&apos;ll use this to contact you. We will not share your email
-                with anyone else.
-              </FieldDescription>
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -52,10 +48,10 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
               </FieldDescription>
             </Field>
             <Field>
-              <FieldLabel htmlFor="confirm-password">
-                Confirm Password
+              <FieldLabel htmlFor="phone">
+                Phone
               </FieldLabel>
-              <Input id="confirm-password" type="password" required />
+              <Input id="phone" type="tel" required />
               <FieldDescription>Please confirm your password.</FieldDescription>
             </Field>
             <FieldGroup>
