@@ -7,7 +7,7 @@ export default function CommonLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="mx-auto min-h-[calc(100vh-128px)] container px-4">
+    <div className="min-h-[calc(100vh-128px)]">
       <Header />
       {children}
       <Footer />
