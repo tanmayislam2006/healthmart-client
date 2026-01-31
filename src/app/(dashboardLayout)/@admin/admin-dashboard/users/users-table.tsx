@@ -2,16 +2,8 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
-import { DataTable } from "@/components/data-table";;
-
-
-export type AdminUser = {
-  id: string;
-  name: string;
-  email: string;
-  role: "ADMIN" | "SELLER" | "CUSTOMER";
-  status: "ACTIVE" | "BANNED";
-};
+import { DataTable } from "@/components/data-table";
+import { UserActions, AdminUser } from "./user-actions";
 
 export function UsersTable({ data }: { data: AdminUser[] }) {
 
@@ -43,11 +35,11 @@ export function UsersTable({ data }: { data: AdminUser[] }) {
     {
       id: "actions",
       header: "Actions",
-    //   cell: ({ row }) => (
-    //     <UserActions
-    //       user={row.original}
-    //     />
-    //   ),
+      cell: ({ row }) => (
+        <UserActions
+          user={row.original}
+        />
+      ),
     },
   ];
 
