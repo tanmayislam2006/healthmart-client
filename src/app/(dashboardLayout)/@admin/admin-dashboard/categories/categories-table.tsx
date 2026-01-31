@@ -2,20 +2,13 @@
 
 import { useState, useTransition } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash2, MoreHorizontal } from "lucide-react";
+import { Pencil } from "lucide-react";
 
 import { DataTable } from "@/components/data-table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Category, CategoryStatus } from "@/types";
-import { EditCategoryDialog } from "@/components/EditCategoryDialog";
+import { EditCategoryDialog, SaveResponse } from "@/components/EditCategoryDialog";
 
 
 type CategoriesTableProps = {
@@ -23,7 +16,7 @@ type CategoriesTableProps = {
   onUpdate: (
     id: string,
     data: { name?: string; description?: string; status?: CategoryStatus },
-  ) => Promise<void>;
+  ) => Promise<SaveResponse>;
 };
 
 export function CategoriesTable({ data, onUpdate }: CategoriesTableProps) {
@@ -67,7 +60,7 @@ export function CategoriesTable({ data, onUpdate }: CategoriesTableProps) {
       header: "Actions",
       cell: ({ row }) => {
         const category = row.original;
-        return<Pencil onClick={() => setEditing(category)} className="mr-2 h-4 w-4" />
+        return<Pencil onClick={() => setEditing(category)} className="mr-2 h-4 w-4 cursor-pointer" />
       },
     },
   ];

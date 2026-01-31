@@ -28,7 +28,7 @@ type FormState = {
   description: string;
   status: CategoryStatus;
 };
-type SaveResponse = {
+export type SaveResponse = {
   success: boolean;
   message: string;
   data: any;
