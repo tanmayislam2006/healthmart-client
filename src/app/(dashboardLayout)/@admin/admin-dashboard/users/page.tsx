@@ -1,6 +1,6 @@
 import { adminService } from "@/service/admin.service";
 import { UsersTable } from "./users-table";
-// import { toggleUserStatus } from "@/action/admin.action";
+
 
 export default async function AdminUsersPage() {
   const users = await adminService.getAllUser();

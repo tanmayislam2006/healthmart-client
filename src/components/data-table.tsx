@@ -35,7 +35,7 @@ export function DataTable<TData>({
   });
 
   return (
-    <div className={cn("rounded-md border overflow-hidden", className)}>
+    <div className={cn("rounded-md border overflow-hidden max-w-7xl mx-auto", className)}>
       <Table>
         {/* Header */}
         <TableHeader className="bg-primary text-primary-foreground">
