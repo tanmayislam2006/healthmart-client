@@ -30,7 +30,7 @@ export default async function DashboardLayout({
 }: DashboardLayoutProps) {
   const { data } = await userService.getSessionUser();
 
-  const role = data.user.role;
+  const role = data?.user.role;
 
   const renderDashboard = () => {
     switch (role) {
@@ -55,7 +55,7 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <AppSidebar user={data.user} />
+      <AppSidebar user={data?.user} />
 
       <SidebarInset>
         {/* Header */}
@@ -77,7 +77,7 @@ export default async function DashboardLayout({
 
               <BreadcrumbItem>
                 <BreadcrumbPage className="capitalize">
-                  {role.toLowerCase()}
+                  {role?.toLowerCase()}
                 </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>

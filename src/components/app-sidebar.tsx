@@ -33,7 +33,7 @@ const logo = {
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
   let navItems: Route[] = [];
 
-  switch (user.role) {
+  switch (user?.role) {
     case Role.admin:
       navItems = adminRoutes;
       break;
