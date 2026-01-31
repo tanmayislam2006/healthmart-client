@@ -4,8 +4,7 @@ import { cookies } from "next/headers";
 export const adminService = {
   getAllUser: async () => {
     try {
-      const cookieStore = cookies();
-console.log("Ghfdgvhfvh vhjvhfhvfdvhfdvbh",cookieStore);
+      const cookieStore = await cookies();
       const res = await fetch(`${env.BACKEND_URL}/admin/users`, {
         headers: {
           Cookie: cookieStore.toString(),
@@ -29,12 +28,14 @@ console.log("Ghfdgvhfvh vhjvhfhvfdvhfdvbh",cookieStore);
     status: "ACTIVE" | "BANNED"
   ) => {
     try {
+      const cookieStore = await cookies();
       const res = await fetch(
         `${env.BACKEND_URL}/admin/users/${userId}`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            Cookie: cookieStore.toString(),
           },
           credentials: "include",
           body: JSON.stringify({ status }),
