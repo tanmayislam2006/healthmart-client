@@ -1,8 +1,9 @@
 import { env } from "@/env";
 import { cookies } from "next/headers";
+import { ApiResponse, Session } from "@/types";
 
 export const userService = {
-  getSessionUser: async function () {
+  getSessionUser: async function (): Promise<ApiResponse<Session>> {
     try {
       const cookieStore = await cookies();
 
