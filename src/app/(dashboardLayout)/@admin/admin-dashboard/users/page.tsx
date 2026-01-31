@@ -1,5 +1,6 @@
+import { UsersTable } from "@/components/modules/admin/users-table";
 import { adminService } from "@/service/admin.service";
-import { UsersTable } from "./users-table";
+
 
 
 export default async function AdminUsersPage() {

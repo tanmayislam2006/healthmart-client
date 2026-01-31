@@ -50,11 +50,9 @@ export const adminService = {
     }
   },
 
-  
   // ! fetch All Category
 
   getCategory: async () => {
-
     try {
       const res = await fetch(`${env.BACKEND_URL}/medicine/category`, {
         cache: "no-store",
@@ -72,6 +70,30 @@ export const adminService = {
     }
   },
 
+  createCategory: async (
+    data: { name?: string; description?: string },
+  ) => {
+    "use server";
+    const cookieStore = await cookies();
+    try {
+      const res = await fetch(`${env.BACKEND_URL}/admin/categories`, {
+        method: "POST",
+        headers: {
+          Cookie: cookieStore.toString(),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      revalidatePath("/admin-dashboard/categories");
+
+      return await res.json();
+    } catch (error) {
+      console.log(error);
+      throw new Error("Can not Create the category");
+    }
+  },
+  
   updateCategory: async (
     id: string,
     data: { name?: string; description?: string; status?: CategoryStatus },
@@ -88,14 +110,12 @@ export const adminService = {
         body: JSON.stringify(data),
       });
 
-    
       revalidatePath("/admin-dashboard/categories");
-   
+
       return await res.json();
     } catch (error) {
       console.log(error);
       throw new Error("Can not Update the category");
     }
   },
-
 };
