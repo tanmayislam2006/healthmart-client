@@ -70,9 +70,7 @@ export const adminService = {
     }
   },
 
-  createCategory: async (
-    data: { name?: string; description?: string },
-  ) => {
+  createCategory: async (data: { name?: string; description?: string }) => {
     "use server";
     const cookieStore = await cookies();
     try {
@@ -93,7 +91,7 @@ export const adminService = {
       throw new Error("Can not Create the category");
     }
   },
-  
+
   updateCategory: async (
     id: string,
     data: { name?: string; description?: string; status?: CategoryStatus },
@@ -113,6 +111,48 @@ export const adminService = {
       revalidatePath("/admin-dashboard/categories");
 
       return await res.json();
+    } catch (error) {
+      console.log(error);
+      throw new Error("Can not Update the category");
+    }
+  },
+
+  getAllSellerRequests: async () => {
+    const cookieStore = await cookies();
+    try {
+      const res = await fetch(`${env.BACKEND_URL}/admin/seller-req`, {
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      return await res.json();
+    } catch (error) {
+      console.log(error);
+      throw new Error("Can not Update the category");
+    }
+  },
+
+  updateSellerRequestStatus: async (
+    id: string,
+    status: "PENDING" | "APPROVED" | "REJECT",
+  ) => {
+    "use server";
+    console.log(id,status);
+    const cookieStore = await cookies();
+    try {
+      const res = await fetch(`${env.BACKEND_URL}/admin/update/${id}`, {
+        method: "PATCH",
+        headers: {
+          Cookie: cookieStore.toString(),
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({status}),
+      });
+
+      revalidatePath("/admin-dashboard/seller-requests");
+      return await res.json()
     } catch (error) {
       console.log(error);
       throw new Error("Can not Update the category");
