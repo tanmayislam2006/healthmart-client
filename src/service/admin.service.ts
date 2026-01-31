@@ -139,7 +139,7 @@ export const adminService = {
     status: "PENDING" | "APPROVED" | "REJECT",
   ) => {
     "use server";
-    console.log(id,status);
+    console.log(id, status);
     const cookieStore = await cookies();
     try {
       const res = await fetch(`${env.BACKEND_URL}/admin/update/${id}`, {
@@ -148,11 +148,28 @@ export const adminService = {
           Cookie: cookieStore.toString(),
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({status}),
+        body: JSON.stringify({ status }),
       });
 
       revalidatePath("/admin-dashboard/seller-requests");
-      return await res.json()
+      return await res.json();
+    } catch (error) {
+      console.log(error);
+      throw new Error("Can not Update the Seller Req");
+    }
+  },
+
+  getAllOrders: async () => {
+    const cookieStore = await cookies();
+    try {
+      const res = await fetch(`${env.BACKEND_URL}/admin/orders`, {
+        headers: {
+          Cookie: cookieStore.toString(),
+        },
+        cache: "no-store",
+      });
+
+      return await res.json();
     } catch (error) {
       console.log(error);
       throw new Error("Can not Update the category");
