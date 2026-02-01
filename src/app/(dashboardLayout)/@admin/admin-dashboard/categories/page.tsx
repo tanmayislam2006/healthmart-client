@@ -3,6 +3,7 @@ import { adminService } from "@/service/admin.service";
 import { AddCategoryButton } from "@/components/modules/admin/add-category-button";
 import { CategoriesTable } from "@/components/modules/admin/categories-table";
 
+export const dynamic = "force-dynamic";
 
 export default async function CategoriesPage() {
   const { data } = await adminService.getCategory();

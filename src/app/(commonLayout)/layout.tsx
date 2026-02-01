@@ -2,6 +2,7 @@ import { Footer } from "@/components/Layout/Footer";
 import { Header } from "@/components/Layout/Header";
 import { userService } from "@/service/user.service";
 
+
 export default async function CommonLayout({
   children,
 }: {

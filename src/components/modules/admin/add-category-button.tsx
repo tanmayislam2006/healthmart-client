@@ -2,11 +2,10 @@
 
 import { useState, useTransition } from "react";
 import { Plus } from "lucide-react";
-
 import { Button } from "@/components/ui/button";
 import { AddCategoryDialog } from "./add-category-dialog";
-import { SaveResponse } from "@/components/EditCategoryDialog";
 import { toast } from "sonner";
+import type { SaveResponse } from "@/types";
 
 type Props = {
   onCreate: (data: {
@@ -21,11 +20,17 @@ export function AddCategoryButton({ onCreate }: Props) {
 
   const handleCreate = (data: { name: string; description?: string }) => {
     startTransition(async () => {
-      const res = await onCreate(data);
-      setOpen(false);
-      if (res.success) toast.success(`${res.message}`);
-      else {
-        toast.error(`${res.message}`);
+      try {
+        const res = await onCreate(data);
+
+        if (res?.success) {
+          toast.success(res.message);
+          setOpen(false);
+        } else {
+          toast.error(res?.message ?? "Failed to create category");
+        }
+      } catch {
+        toast.error("Something went wrong");
       }
     });
   };

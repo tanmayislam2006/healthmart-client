@@ -16,6 +16,7 @@ import { AppSidebar } from "@/components/app-sidebar";
 import { userService } from "@/service/user.service";
 import { Role } from "@/constant/role";
 
+export const dynamic = "force-dynamic";
 
 type DashboardLayoutProps = {
   admin: React.ReactNode;

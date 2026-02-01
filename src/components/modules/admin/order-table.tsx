@@ -15,10 +15,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+type CustomerInfo = {
+  id: string;
+  name: string;
+  email: string;
+};
+
 export type OrderRow = {
   id: string;
-  customerName: string;
-  customerEmail: string;
+  customer: CustomerInfo;
   total: string;
   status: "PENDING" | "PROCESSING" | "DELIVERED" | "CANCELLED";
   createdAt: string;
@@ -40,14 +45,16 @@ export function OrderTable({ data }: Props) {
     {
       accessorKey: "customerName",
       header: "Customer",
-      cell: ({ row }) => (
-        <div>
-          <p className="font-medium">{row.original?.customer?.name}</p>
-          <p className="text-xs text-muted-foreground">
-            {row.original.customer?.email}
-          </p>
-        </div>
-      ),
+      cell: ({ row }) => {
+        return (
+          <div>
+            <p className="font-medium">{row.original?.customer?.name}</p>
+            <p className="text-xs text-muted-foreground">
+              {row.original.customer?.email}
+            </p>
+          </div>
+        );
+      },
     },
     {
       accessorKey: "total",

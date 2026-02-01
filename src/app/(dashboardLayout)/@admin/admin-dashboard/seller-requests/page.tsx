@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { SellerRequestTable } from "@/components/modules/admin/seller-req-table";
 import { adminService } from "@/service/admin.service";
 
