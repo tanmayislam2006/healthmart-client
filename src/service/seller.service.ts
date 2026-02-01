@@ -1,5 +1,6 @@
 import { env } from "@/env";
 import { CreateMedicineInput } from "@/schema/medicine.schema";
+import { OrderStatus } from "@/types";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
@@ -75,5 +76,39 @@ export const sellerService = {
       console.log(error);
       throw new Error("Failed to delete medicine");
     }
+  },
+
+  getSellerOrders: async () => {
+    const cookieStore = await cookies();
+
+    const res = await fetch(`${env.BACKEND_URL}/seller/orders`, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+    });
+
+    return res.json();
+  },
+  
+  updateOrderStatus: async (orderId: string, status: OrderStatus) => {
+    "use server";
+
+    const cookieStore = await cookies();
+
+    const res = await fetch(`${env.BACKEND_URL}/seller/orders/${orderId}`, {
+      method: "PATCH",
+      headers: {
+        Cookie: cookieStore.toString(),
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to update order");
+    }
+
+    revalidatePath("/seller-dashboard/orders");
   },
 };
