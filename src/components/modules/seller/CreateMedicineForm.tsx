@@ -1,14 +1,10 @@
 "use client";
 
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, type SubmitHandler } from "react-hook-form";
 import { toast } from "sonner";
 
-import {
-  createMedicineSchema,
-  CreateMedicineInput,
-} from "@/schema/medicine.schema";
+import { CreateMedicineInput } from "@/schema/medicine.schema";
 
 import { Category, SaveResponse } from "@/types";
 
@@ -38,21 +34,19 @@ export function CreateMedicineForm({ categories, onSubmit }: Props) {
     setValue,
     formState: { errors },
     reset,
-  } = useForm<CreateMedicineInput>({
-    resolver: zodResolver(createMedicineSchema),
-  });
+  } = useForm<CreateMedicineInput>();
 
-  const submitHandler = (data: CreateMedicineInput) => {
+  const submitHandler: SubmitHandler<CreateMedicineInput> = (data) => {
     startTransition(async () => {
       try {
-        await onSubmit(data).then((r) => {
-          if (r.success) toast.success("Medicine created successfully");
-          else {
-            toast.error("Can Not Add Medicine");
-          }
-        });
+        const res = await onSubmit(data);
 
-        reset();
+        if (res.success) {
+          toast.success("Medicine created successfully");
+          reset();
+        } else {
+          toast.error(res.message);
+        }
       } catch {
         toast.error("Failed to create medicine");
       }
@@ -63,7 +57,7 @@ export function CreateMedicineForm({ categories, onSubmit }: Props) {
     <div className="mx-auto max-w-3xl">
       <form
         onSubmit={handleSubmit(submitHandler)}
-        className="grid max-w-xl gap-4 "
+        className="grid max-w-xl gap-4"
       >
         {/* Name */}
         <div className="space-y-1">
@@ -87,17 +81,23 @@ export function CreateMedicineForm({ categories, onSubmit }: Props) {
 
         {/* Price & Stock */}
         <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1">
+          <div>
             <Label>Price</Label>
-            <Input type="number" {...register("price")} />
+            <Input
+              type="number"
+              {...register("price", { valueAsNumber: true })}
+            />
             {errors.price && (
               <p className="text-sm text-destructive">{errors.price.message}</p>
             )}
           </div>
 
-          <div className="space-y-1">
+          <div>
             <Label>Stock</Label>
-            <Input type="number" {...register("stock")} />
+            <Input
+              type="number"
+              {...register("stock", { valueAsNumber: true })}
+            />
             {errors.stock && (
               <p className="text-sm text-destructive">{errors.stock.message}</p>
             )}
@@ -120,9 +120,7 @@ export function CreateMedicineForm({ categories, onSubmit }: Props) {
           <Label>Category</Label>
           <Select
             onValueChange={(value) =>
-              setValue("categoryId", value, {
-                shouldValidate: true,
-              })
+              setValue("categoryId", value, { shouldValidate: true })
             }
           >
             <SelectTrigger>
