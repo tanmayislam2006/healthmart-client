@@ -22,4 +22,19 @@ export const userService = {
       return { data: null, error: { message: "Something Went Wrong" } };
     }
   },
+
+
+   getCategories: async () => {
+    try {
+      const res = await fetch(`${env.BACKEND_URL}/medicine/category`, {
+        cache: "no-store",
+      });
+
+      return await res.json();
+    } catch (error) {
+      console.log(error);
+      throw new Error("Can not Get  the Categories");
+    }
+  },
+
 };
