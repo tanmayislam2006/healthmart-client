@@ -24,7 +24,7 @@ export const sellerRoutes: Route[] = [
       },
       {
         title: "Add Medicine",
-        url: "/seller-dashboard/medicines/add",
+        url: "/seller-dashboard/medicines-add",
         icon: PlusCircle,
       },
       {
