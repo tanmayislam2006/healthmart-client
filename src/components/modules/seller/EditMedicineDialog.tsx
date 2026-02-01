@@ -16,9 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 
 import { Medicine, SaveResponse } from "@/types";
-import {
-  CreateMedicineInput,
-} from "@/schema/medicine.schema";
+import { CreateMedicineInput } from "@/schema/medicine.schema";
 
 type Props = {
   medicine: Medicine | null;
@@ -26,11 +24,7 @@ type Props = {
   onSave: (id: string, data: CreateMedicineInput) => Promise<SaveResponse>;
 };
 
-export function EditMedicineDialog({
-  medicine,
-  onClose,
-  onSave,
-}: Props) {
+export function EditMedicineDialog({ medicine, onClose, onSave }: Props) {
   const form = useForm<CreateMedicineInput>();
 
   useEffect(() => {
@@ -49,8 +43,12 @@ export function EditMedicineDialog({
   if (!medicine) return null;
 
   const submit: SubmitHandler<CreateMedicineInput> = async (data) => {
-    await onSave(medicine.id, data);
-    toast.success("Medicine updated");
+    await onSave(medicine.id, data).then((r) => {
+      if (r.success) {
+        toast.success("Medicine updated");
+      }
+    });
+
     onClose();
   };
 
@@ -62,21 +60,38 @@ export function EditMedicineDialog({
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(submit)} className="space-y-4">
+          {/* Name */}
           <div>
             <Label>Name</Label>
             <Input {...form.register("name")} />
           </div>
 
+          {/* Description */}
           <div>
             <Label>Description</Label>
             <Textarea {...form.register("description")} />
           </div>
 
+          {/* Price & Stock */}
           <div className="grid grid-cols-2 gap-4">
-            <Input type="number" {...form.register("price")} />
-            <Input type="number" {...form.register("stock")} />
+            <div>
+              <Label>Price</Label>
+              <Input
+                type="number"
+                {...form.register("price", { valueAsNumber: true })}
+              />
+            </div>
+
+            <div>
+              <Label>Stock</Label>
+              <Input
+                type="number"
+                {...form.register("stock", { valueAsNumber: true })}
+              />
+            </div>
           </div>
 
+          {/* Manufacturer */}
           <div>
             <Label>Manufacturer</Label>
             <Input {...form.register("manufacturer")} />

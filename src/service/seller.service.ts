@@ -22,7 +22,6 @@ export const sellerService = {
   },
   addMedicine: async (data: CreateMedicineInput) => {
     "use server";
-
     try {
       const cookieStore = await cookies();
       const res = await fetch(`${env.BACKEND_URL}/seller/medicine`, {
@@ -45,7 +44,6 @@ export const sellerService = {
   updateMedicineInfo: async (id: string, data: CreateMedicineInput) => {
     "use server";
     const cookieStore = await cookies();
-   
     try {
       const res = await fetch(`${env.BACKEND_URL}/seller/medicine/${id}`, {
         method: "PATCH",
@@ -56,7 +54,7 @@ export const sellerService = {
         body: JSON.stringify(data),
       });
       const result = await res.json();
-    
+      revalidatePath("/seller-dashboard/medicines");
       return result;
     } catch (error) {
       throw new Error("Failed to update medicine");
@@ -71,7 +69,7 @@ export const sellerService = {
         method: "DELETE",
         headers: { Cookie: cookieStore.toString() },
       });
-      revalidatePath("/seller-dashboard/medicines");
+
       return await res.json();
     } catch (error) {
       console.log(error);
