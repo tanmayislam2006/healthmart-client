@@ -3,6 +3,7 @@ import { MedicineCard } from "./MedicineCard";
 
 
 
+
 export function MedicineGrid({ medicines }:{medicines:MedicineResponse[]}) {
 
   return (

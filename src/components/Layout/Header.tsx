@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   ShoppingCart,
   LayoutDashboard,
@@ -25,27 +25,49 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+
 import { authClient } from "@/lib/auth-client";
 import { Role } from "@/constant/role";
+
 
 type UserRole = "ADMIN" | "SELLER" | "CUSTOMER";
 
 type HeaderUser = {
   id: string;
   name: string;
-  role: UserRole;
+  email: string;
+  role?: UserRole;
   image?: string | null;
 };
 
-type HeaderProps = {
-  user: HeaderUser | null;
-  cartCount: number;
-};
 
-export function Header({ user, cartCount }: HeaderProps) {
+export function Header({ cartCount = 0 }: { cartCount?: number }) {
   const router = useRouter();
+
+  const [user, setUser] = useState<HeaderUser | null>(null);
+  const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const loadSession = async () => {
+      try {
+        const res = await authClient.getSession();
+
+        if ("data" in res && res.data?.user) {
+          setUser(res.data.user);
+        } else {
+          setUser(null);
+        }
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadSession();
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -58,15 +80,17 @@ export function Header({ user, cartCount }: HeaderProps) {
 
   const handleSignOut = async () => {
     await authClient.signOut();
+    setUser(null);
     router.push("/");
   };
-
   const dashboardLink =
     user?.role === Role.admin
       ? "/admin-dashboard"
       : user?.role === Role.seller
-        ? "/seller-dashboard"
-        : "/dashboard";
+      ? "/seller-dashboard"
+      : "/dashboard";
+
+
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur">
@@ -85,7 +109,7 @@ export function Header({ user, cartCount }: HeaderProps) {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Nav */}
         <nav className="hidden items-center gap-6 md:flex">
           {["medicines", "categories", "about"].map((item) => (
             <Link
@@ -129,7 +153,7 @@ export function Header({ user, cartCount }: HeaderProps) {
           </Button>
 
           {/* User Menu */}
-          {user ? (
+          {!loading && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
@@ -145,7 +169,7 @@ export function Header({ user, cartCount }: HeaderProps) {
               <DropdownMenuContent align="end" className="w-56">
                 <div className="px-2 py-1.5">
                   <p className="text-sm font-medium">{user.name}</p>
-                  <p className="text-xs text-muted-foreground">{user.role}</p>
+                  <p className="text-xs text-muted-foreground">{user.email}</p>
                 </div>
 
                 <DropdownMenuSeparator />
@@ -175,7 +199,7 @@ export function Header({ user, cartCount }: HeaderProps) {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-          ) : (
+          ) : !loading ? (
             <div className="hidden gap-2 sm:flex">
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/sign-in">Sign In</Link>
@@ -184,7 +208,7 @@ export function Header({ user, cartCount }: HeaderProps) {
                 <Link href="/sign-up">Get Started</Link>
               </Button>
             </div>
-          )}
+          ) : null}
 
           {/* Mobile Toggle */}
           <Button

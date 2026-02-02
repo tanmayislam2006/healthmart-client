@@ -1,5 +1,5 @@
-import { LoadMoreMedicines } from "@/components/modules/customer/LoadMoreMedicines";
-import { MedicineGrid } from "@/components/modules/customer/MedicineGrid";
+
+import { MedicineGrid } from "@/components/modules/medicine/MedicineGrid";
 import { userService } from "@/service/user.service";
 
 export const revalidate = 10;
