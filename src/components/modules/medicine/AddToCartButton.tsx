@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import { cartStorage } from "@/lib/cart";
 
 
@@ -16,11 +17,10 @@ export function AddToCartButton({ medicine }: any) {
   };
 
   return (
-    <button
+    <Button
       onClick={handleAdd}
-      className="bg-orange-500 text-white px-6 py-2 rounded"
     >
       Add to Cart
-    </button>
+    </Button>
   );
 }

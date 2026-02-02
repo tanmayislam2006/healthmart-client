@@ -1,4 +1,4 @@
-import { revalidate } from "@/app/(commonLayout)/medicines/page";
+
 import { env } from "@/env";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
@@ -21,7 +21,6 @@ export const customerService = {
   },
   createReview: async (data: CreateReviewPayload) => {
     "use server"
-    console.log(data.medicineId);
     const cookieStore = await cookies();
     const res = await fetch(`${env.BACKEND_URL}/customer/reviews`, {
       method: "POST",
