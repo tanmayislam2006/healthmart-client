@@ -60,13 +60,32 @@ export const userService = {
 
     const url = `${env.BACKEND_URL}/medicine?${queryParams.toString()}`;
 
-    const res = await fetch(url, {
-      next: {
-        revalidate: 10,
-      },
-    });
+    try {
+      const res = await fetch(url, {
+        next: {
+          revalidate: 10,
+        },
+      });
 
-    return res.json();
+      if (!res.ok) {
+        console.error(
+          `Error fetching medicines: ${res.status} ${res.statusText}`,
+        );
+        return { data: { data: [] } };
+      }
+
+      const text = await res.text();
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        console.error("Error parsing JSON response:", e);
+        console.error("Response text preview:", text.substring(0, 100));
+        return { data: { data: [] } };
+      }
+    } catch (error) {
+      console.error("Network or other error in getAllMedicines:", error);
+      return { data: { data: [] } };
+    }
   },
   getMedicineById: async (id: string) => {
     const res = await fetch(`${env.BACKEND_URL}/medicine/${id}`, {
