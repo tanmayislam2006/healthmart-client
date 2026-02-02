@@ -1,6 +1,12 @@
 import { env } from "@/env";
 import { cookies } from "next/headers";
-
+interface GetAllMedicinesParams {
+  search?: string;
+  category?: string;
+  isFeatured?: boolean;
+  page?: number;
+  limit?: number;
+}
 export const userService = {
   getSessionUser: async function () {
     try {
@@ -23,8 +29,7 @@ export const userService = {
     }
   },
 
-
-   getCategories: async () => {
+  getCategories: async () => {
     try {
       const res = await fetch(`${env.BACKEND_URL}/medicine/category`, {
         cache: "no-store",
@@ -37,4 +42,30 @@ export const userService = {
     }
   },
 
+  getAllMedicines: async ({
+    search,
+    category,
+    isFeatured,
+    page = 1,
+    limit = 8,
+  }: GetAllMedicinesParams = {}) => {
+    const queryParams = new URLSearchParams();
+
+    if (search) queryParams.append("search", search);
+    if (category) queryParams.append("category", category);
+    if (typeof isFeatured === "boolean")
+      queryParams.append("isFeatured", String(isFeatured));
+    if (page) queryParams.append("page", String(page));
+    if (limit) queryParams.append("limit", String(limit));
+
+    const url = `${env.BACKEND_URL}/medicine?${queryParams.toString()}`;
+
+    const res = await fetch(url, {
+      next: {
+        revalidate: 10,
+      },
+    });
+
+    return res.json();
+  },
 };
