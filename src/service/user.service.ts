@@ -68,4 +68,12 @@ export const userService = {
 
     return res.json();
   },
+  getMedicineById: async (id: string) => {
+    const res = await fetch(`${env.BACKEND_URL}/medicine/${id}`, {
+      next: { revalidate: 60 },
+    });
+
+    if (!res.ok) return null;
+    return res.json();
+  },
 };

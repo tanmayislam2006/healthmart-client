@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { MedicineGrid } from "./MedicineGrid";
+
 import { env } from "@/env";
+import { MedicineGrid } from "../medicine/MedicineGrid";
 
 export function LoadMoreMedicines({ initialPage }:{initialPage:number}) {
   const [page, setPage] = useState(initialPage);
