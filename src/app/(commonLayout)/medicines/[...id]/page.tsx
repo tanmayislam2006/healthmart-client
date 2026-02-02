@@ -4,6 +4,7 @@ import { MedicineInfo } from "@/components/modules/medicine/MedicineInfo";
 import { ReviewList } from "@/components/modules/medicine/ReviewList";
 import { AddReviewForm } from "@/components/modules/medicine/AddReviewForm";
 import { userService } from "@/service/user.service";
+import { customerService } from "@/service/customer.service";
 
 export const revalidate = 60;
 
@@ -28,7 +29,7 @@ export default async function MedicineDetailsPage({
       <section className="space-y-6">
         <h2 className="text-2xl font-semibold">Customer Reviews</h2>
         <ReviewList reviews={medicine.data.reviews} />
-        <AddReviewForm medicineId={medicine.id} />
+        <AddReviewForm medicineId={medicine.data.id} onSubmit={customerService.createReview} />
       </section>
     </div>
   );

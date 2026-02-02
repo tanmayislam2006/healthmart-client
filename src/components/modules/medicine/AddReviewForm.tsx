@@ -1,20 +1,31 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { userService } from "@/service/user.service";
 import { authClient } from "@/lib/auth-client";
+import { SaveResponse } from "@/types";
+import { toast } from "sonner";
 
-export function AddReviewForm({ medicineId }: { medicineId: string }) {
-  const [user, setUser] = useState<any>(null);
+type PropsForReview = {
+  medicineId: string;
+  onSubmit: (data: {
+    medicineId: string;
+    rating: number;
+    content: string;
+  }) => Promise<SaveResponse>;
+};
+
+export function AddReviewForm({ medicineId, onSubmit }: PropsForReview) {
+  const [user, setUser] = useState<{ id: string; name?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [content, setContent] = useState("");
   const [rating, setRating] = useState(5);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadSession = async () => {
       try {
         const res = await authClient.getSession();
-
         if ("data" in res && res.data?.user) {
           setUser(res.data.user);
         } else {
@@ -30,6 +41,10 @@ export function AddReviewForm({ medicineId }: { medicineId: string }) {
     loadSession();
   }, []);
 
+  if (loading) {
+    return <p className="text-sm text-gray-500">Loading session...</p>;
+  }
+
   if (!user) {
     return (
       <p className="text-sm text-gray-500">Please login to add a review.</p>
@@ -37,17 +52,28 @@ export function AddReviewForm({ medicineId }: { medicineId: string }) {
   }
 
   const handleSubmit = async () => {
-    await fetch(`/api/review`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        medicineId,
-        rating,
-        content,
-      }),
-    });
+    if (!content.trim()) {
+      setError("Review content cannot be empty.");
+      return;
+    }
 
-    setContent("");
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const res = await onSubmit({ medicineId, rating, content });
+
+      if (res.success) {
+        toast.success(res.message);
+        setContent("");
+      } else {
+        setError(res.message || "Failed to save review.");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -61,7 +87,7 @@ export function AddReviewForm({ medicineId }: { medicineId: string }) {
       >
         {[1, 2, 3, 4, 5].map((r) => (
           <option key={r} value={r}>
-            {r} Star
+            {r} Star{r > 1 ? "s" : ""}
           </option>
         ))}
       </select>
@@ -71,13 +97,19 @@ export function AddReviewForm({ medicineId }: { medicineId: string }) {
         onChange={(e) => setContent(e.target.value)}
         className="border p-2 w-full rounded"
         placeholder="Write your experience..."
+        rows={4}
       />
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
 
       <button
         onClick={handleSubmit}
-        className="px-4 py-2 bg-blue-600 text-white rounded"
+        disabled={submitting}
+        className={`px-4 py-2 rounded text-white ${
+          submitting ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+        }`}
       >
-        Submit Review
+        {submitting ? "Submitting..." : "Submit Review"}
       </button>
     </div>
   );
