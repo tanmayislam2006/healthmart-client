@@ -181,13 +181,6 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
                   </Link>
                 </DropdownMenuItem>
 
-                <DropdownMenuItem asChild>
-                  <Link href="/orders">
-                    <Package className="mr-2 h-4 w-4" />
-                    My Orders
-                  </Link>
-                </DropdownMenuItem>
-
                 <DropdownMenuSeparator />
 
                 <DropdownMenuItem

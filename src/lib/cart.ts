@@ -34,6 +34,17 @@ export const cartStorage = {
     this.set(this.get().filter((i) => i.medicineId !== medicineId));
   },
 
+  updateQuantity(medicineId: string, quantity: number) {
+    const safeQuantity = Math.max(1, quantity);
+    const cart = this.get().map((item) =>
+      item.medicineId === medicineId
+        ? { ...item, quantity: safeQuantity }
+        : item
+    );
+
+    this.set(cart);
+  },
+
   clear() {
     localStorage.removeItem(CART_KEY);
   },

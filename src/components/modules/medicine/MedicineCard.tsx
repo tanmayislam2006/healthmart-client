@@ -8,31 +8,31 @@ export function MedicineCard({ medicine }: { medicine: MedicineResponse }) {
   const isOutOfStock = medicine.stock === 0;
 
   return (
-    <div className="group rounded-xl border bg-background p-4 transition hover:shadow-lg">
+    <div className="group rounded-2xl border border-primary/10 bg-white/70 p-5 transition hover:-translate-y-0.5 hover:shadow-lg">
       {/* Category */}
-      <Badge variant="secondary" className="mb-2">
+      <Badge variant="secondary" className="mb-3 border border-primary/10 bg-primary/10 text-primary">
         {medicine.category.name}
       </Badge>
 
       {/* Name */}
-      <h3 className="line-clamp-1 text-lg font-semibold">
+      <h3 className="line-clamp-1 text-lg font-semibold text-slate-900">
         {medicine.name}
       </h3>
 
       {/* Manufacturer */}
-      <p className="text-sm text-muted-foreground">
+      <p className="text-sm text-slate-500">
         {medicine.manufacturer}
       </p>
 
       {/* Description */}
-      <p className="mt-2 line-clamp-2 text-sm">
+      <p className="mt-3 line-clamp-2 text-sm text-slate-600">
         {medicine.description}
       </p>
 
       {/* Price & Stock */}
       <div className="mt-4 flex items-center justify-between">
-        <span className="text-xl font-bold">
-          ${medicine.price}
+        <span className="text-xl font-bold text-primary">
+          BDT {medicine.price}
         </span>
 
         {isOutOfStock ? (
@@ -40,7 +40,7 @@ export function MedicineCard({ medicine }: { medicine: MedicineResponse }) {
             Out of stock
           </span>
         ) : (
-          <span className="text-sm text-muted-foreground">
+          <span className="text-sm text-slate-500">
             Stock: {medicine.stock}
           </span>
         )}
@@ -50,7 +50,7 @@ export function MedicineCard({ medicine }: { medicine: MedicineResponse }) {
       <div className="mt-4 flex gap-2">
         <Button
           asChild
-          className="w-full"
+          className="w-full bg-primary text-white hover:bg-primary/90"
           disabled={isOutOfStock}
         >
           <Link href={`/medicines/${medicine.id}`}>
