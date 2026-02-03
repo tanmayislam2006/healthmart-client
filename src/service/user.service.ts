@@ -8,6 +8,20 @@ interface GetAllMedicinesParams {
   limit?: number;
 }
 export const userService = {
+  safeJson: async (res: Response) => {
+    const text = await res.text();
+    if (!text) return null;
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      console.error("Failed to parse JSON response:", {
+        status: res.status,
+        statusText: res.statusText,
+        textPreview: text.slice(0, 200),
+      });
+      return null;
+    }
+  },
   getSessionUser: async function () {
     try {
       const cookieStore = await cookies();
@@ -35,7 +49,12 @@ export const userService = {
         cache: "no-store",
       });
 
-      return await res.json();
+      if (!res.ok) {
+        console.error("Failed to fetch categories:", res.status, res.statusText);
+        return { data: [] };
+      }
+
+      return (await userService.safeJson(res)) ?? { data: [] };
     } catch (error) {
       console.log(error);
       throw new Error("Can not Get  the Categories");
@@ -66,7 +85,12 @@ export const userService = {
       },
     });
 
-    return res.json();
+    if (!res.ok) {
+      console.error("Failed to fetch medicines:", res.status, res.statusText);
+      return { data: [] };
+    }
+
+    return (await userService.safeJson(res)) ?? { data: [] };
   },
   getMedicineById: async (id: string) => {
     const res = await fetch(`${env.BACKEND_URL}/medicine/${id}`, {
@@ -74,6 +98,6 @@ export const userService = {
     });
 
     if (!res.ok) return null;
-    return res.json();
+    return (await userService.safeJson(res)) ?? null;
   },
 };
