@@ -21,7 +21,7 @@ import { customerService } from "@/service/customer.service";
 
 export const dynamic = "force-dynamic";
 
-type CustomerStatsResponse = {
+type CustomerStatsData = {
   stats: {
     totalOrders: number;
     totalSpent: number;
@@ -36,59 +36,28 @@ type CustomerStatsResponse = {
   }[];
 };
 
-const demoStats: CustomerStatsResponse["stats"] = {
-  totalOrders: 18,
-  totalSpent: 15320,
-  deliveredOrders: 12,
-  pendingOrders: 6,
+type CustomerStatsResponse = {
+  status: number;
+  success: boolean;
+  message: string;
+  data: CustomerStatsData;
 };
-
-const demoRecentOrders: CustomerStatsResponse["recentOrders"] = [
-  {
-    id: "ORD-9A1B3C2D",
-    total: 1420,
-    status: "DELIVERED",
-    createdAt: "2026-01-29T11:20:00.000Z",
-  },
-  {
-    id: "ORD-72F8D0AA",
-    total: 980,
-    status: "SHIPPED",
-    createdAt: "2026-01-24T15:05:00.000Z",
-  },
-  {
-    id: "ORD-5D11BC44",
-    total: 760,
-    status: "PLACED",
-    createdAt: "2026-01-19T09:45:00.000Z",
-  },
-  {
-    id: "ORD-3399CD10",
-    total: 2190,
-    status: "DELIVERED",
-    createdAt: "2026-01-12T18:30:00.000Z",
-  },
-  {
-    id: "ORD-FF10C2EE",
-    total: 540,
-    status: "DELIVERED",
-    createdAt: "2026-01-04T08:25:00.000Z",
-  },
-];
 
 export default async function DashboardPage() {
   let response: CustomerStatsResponse | null = null;
-
   try {
-    response = (await customerService.getCustomerStats()) as
-      | CustomerStatsResponse
-      | null;
+    response = await customerService.getCustomerStats();
   } catch (error) {
     console.log(error);
   }
 
-  const stats = response?.stats ?? demoStats;
-  const recentOrders = response?.recentOrders ?? demoRecentOrders;
+  const stats = response?.data?.stats ?? {
+    totalOrders: 0,
+    totalSpent: 0,
+    deliveredOrders: 0,
+    pendingOrders: 0,
+  };
+  const recentOrders = response?.data?.recentOrders ?? [];
   const deliveredRate = stats.totalOrders
     ? Math.round((stats.deliveredOrders / stats.totalOrders) * 100)
     : 0;

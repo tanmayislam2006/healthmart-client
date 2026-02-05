@@ -56,7 +56,8 @@ export const customerService = {
       },
       cache: "no-store",
     });
-
-    return (await customerService.safeJson(res)) ?? null;
+    const result = await res.json()
+    return result;
   },
+
 };
