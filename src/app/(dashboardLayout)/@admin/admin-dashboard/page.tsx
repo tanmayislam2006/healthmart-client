@@ -21,7 +21,7 @@ import { adminService } from "@/service/admin.service";
 
 export const dynamic = "force-dynamic";
 
-type AdminStatsResponse = {
+type AdminStatsData = {
   stats: {
     totalOrders: number;
     totalRevenue: number;
@@ -39,56 +39,12 @@ type AdminStatsResponse = {
   }[];
 };
 
-const demoStats: AdminStatsResponse["stats"] = {
-  totalOrders: 1240,
-  totalRevenue: 982430,
-  totalMedicines: 348,
-  totalCategories: 24,
-  deliveredOrders: 1018,
+type AdminStatsResponse = {
+  status: number;
+  success: boolean;
+  message: string;
+  data: AdminStatsData;
 };
-
-const demoRecentOrders: AdminStatsResponse["recentOrders"] = [
-  {
-    id: "ADM-2201A",
-    customerName: "Rahim Uddin",
-    customerEmail: "rahim.ud@example.com",
-    total: 2480,
-    status: "DELIVERED",
-    createdAt: "2026-01-30T10:18:00.000Z",
-  },
-  {
-    id: "ADM-2204B",
-    customerName: "Sadia Khan",
-    customerEmail: "sadia.khan@example.com",
-    total: 1120,
-    status: "SHIPPED",
-    createdAt: "2026-01-29T13:45:00.000Z",
-  },
-  {
-    id: "ADM-2207C",
-    customerName: "Fahim Rahman",
-    customerEmail: "fahim.r@example.com",
-    total: 1860,
-    status: "PLACED",
-    createdAt: "2026-01-27T09:05:00.000Z",
-  },
-  {
-    id: "ADM-2210D",
-    customerName: "Nabila Chowdhury",
-    customerEmail: "nabila.c@example.com",
-    total: 3180,
-    status: "DELIVERED",
-    createdAt: "2026-01-25T16:30:00.000Z",
-  },
-  {
-    id: "ADM-2212E",
-    customerName: "Hasan Ali",
-    customerEmail: "hasan.ali@example.com",
-    total: 740,
-    status: "DELIVERED",
-    createdAt: "2026-01-23T12:14:00.000Z",
-  },
-];
 
 export default async function AdminDashBoard() {
   let response: AdminStatsResponse | null = null;
@@ -101,8 +57,14 @@ export default async function AdminDashBoard() {
     console.log(error);
   }
 
-  const stats = response?.stats ?? demoStats;
-  const recentOrders = response?.recentOrders ?? demoRecentOrders;
+  const stats = response?.data?.stats ?? {
+    totalOrders: 0,
+    totalRevenue: 0,
+    totalMedicines: 0,
+    totalCategories: 0,
+    deliveredOrders: 0,
+  };
+  const recentOrders = response?.data?.recentOrders ?? [];
   const deliveredRate = stats.totalOrders
     ? Math.round((stats.deliveredOrders / stats.totalOrders) * 100)
     : 0;

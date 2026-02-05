@@ -198,6 +198,6 @@ export const adminService = {
       cache: "no-store",
     });
 
-    return (await adminService.safeJson(res)) ?? null;
+    return await res.json();
   },
 };
