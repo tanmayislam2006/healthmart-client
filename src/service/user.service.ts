@@ -69,7 +69,7 @@ export const userService = {
     limit = 8,
   }: GetAllMedicinesParams = {}) => {
     const queryParams = new URLSearchParams();
-      console.log(search);
+    
     if (search) queryParams.append("search", search);
     if (category) queryParams.append("category", category);
     if (typeof isFeatured === "boolean")
