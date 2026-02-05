@@ -23,7 +23,7 @@ import { sellerService } from "@/service/seller.service";
 
 export const dynamic = "force-dynamic";
 
-type SellerStatsResponse = {
+type SellerStatsData = {
   stats: {
     totalMedicines: number;
     totalOrders: number;
@@ -45,59 +45,12 @@ type SellerStatsResponse = {
   }[];
 };
 
-const demoStats: SellerStatsResponse["stats"] = {
-  totalMedicines: 42,
-  totalOrders: 96,
-  deliveredOrders: 71,
-  pendingOrders: 25,
-  totalRevenue: 86250,
+type SellerStatsResponse = {
+  status: number;
+  success: boolean;
+  message: string;
+  data: SellerStatsData;
 };
-
-const demoRecentOrders: SellerStatsResponse["recentOrders"] = [
-  {
-    id: "ORD-SL-8812A",
-    customerName: "Arafat Hossain",
-    total: 1860,
-    status: "DELIVERED",
-    createdAt: "2026-01-30T12:30:00.000Z",
-  },
-  {
-    id: "ORD-SL-8820B",
-    customerName: "Nusrat Jahan",
-    total: 920,
-    status: "SHIPPED",
-    createdAt: "2026-01-28T10:12:00.000Z",
-  },
-  {
-    id: "ORD-SL-8828C",
-    customerName: "Tanvir Ahmed",
-    total: 2430,
-    status: "PLACED",
-    createdAt: "2026-01-26T16:05:00.000Z",
-  },
-  {
-    id: "ORD-SL-8833D",
-    customerName: "Mehedi Hasan",
-    total: 760,
-    status: "DELIVERED",
-    createdAt: "2026-01-23T09:50:00.000Z",
-  },
-  {
-    id: "ORD-SL-8837E",
-    customerName: "Farhana Akter",
-    total: 1340,
-    status: "DELIVERED",
-    createdAt: "2026-01-20T14:40:00.000Z",
-  },
-];
-
-const demoLowStock: SellerStatsResponse["lowStockMedicines"] = [
-  { id: "MED-2101", name: "Cefixime 200mg", stock: 4 },
-  { id: "MED-2107", name: "Amlodipine 5mg", stock: 6 },
-  { id: "MED-2113", name: "Napa Extra", stock: 8 },
-  { id: "MED-2120", name: "Vitamin C 500mg", stock: 9 },
-  { id: "MED-2126", name: "Omeprazole 20mg", stock: 3 },
-];
 
 export default async function SellerDashBoard() {
   let response: SellerStatsResponse | null = null;
@@ -110,9 +63,15 @@ export default async function SellerDashBoard() {
     console.log(error);
   }
 
-  const stats = response?.stats ?? demoStats;
-  const recentOrders = response?.recentOrders ?? demoRecentOrders;
-  const lowStockMedicines = response?.lowStockMedicines ?? demoLowStock;
+  const stats = response?.data?.stats ?? {
+    totalMedicines: 0,
+    totalOrders: 0,
+    deliveredOrders: 0,
+    pendingOrders: 0,
+    totalRevenue: 0,
+  };
+  const recentOrders = response?.data?.recentOrders ?? [];
+  const lowStockMedicines = response?.data?.lowStockMedicines ?? [];
   const deliveredRate = stats.totalOrders
     ? Math.round((stats.deliveredOrders / stats.totalOrders) * 100)
     : 0;

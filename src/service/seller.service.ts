@@ -104,7 +104,7 @@ export const sellerService = {
 
     return res.json();
   },
-  
+
   updateOrderStatus: async (orderId: string, status: OrderStatus) => {
     "use server";
 
@@ -134,6 +134,6 @@ export const sellerService = {
       cache: "no-store",
     });
 
-    return (await sellerService.safeJson(res)) ?? null;
+    return await res.json();
   },
 };
