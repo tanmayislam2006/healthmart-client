@@ -5,6 +5,20 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 export const sellerService = {
+  safeJson: async (res: Response) => {
+    const text = await res.text();
+    if (!text) return null;
+    try {
+      return JSON.parse(text);
+    } catch (error) {
+      console.error("Failed to parse JSON response:", {
+        status: res.status,
+        statusText: res.statusText,
+        textPreview: text.slice(0, 200),
+      });
+      return null;
+    }
+  },
   getAllMedicineBySeller: async () => {
     const cookieStore = await cookies();
     try {
@@ -90,7 +104,7 @@ export const sellerService = {
 
     return res.json();
   },
-  
+
   updateOrderStatus: async (orderId: string, status: OrderStatus) => {
     "use server";
 
@@ -110,5 +124,16 @@ export const sellerService = {
     }
 
     revalidatePath("/seller-dashboard/orders");
+  },
+  getSellerStats: async () => {
+    const cookieStore = await cookies();
+    const res = await fetch(`${env.BACKEND_URL}/seller/stats`, {
+      headers: {
+        Cookie: cookieStore.toString(),
+      },
+      cache: "no-store",
+    });
+
+    return await res.json();
   },
 };

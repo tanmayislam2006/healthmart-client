@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 interface GetAllMedicinesParams {
   search?: string;
   category?: string;
-  isFeatured?: boolean;
+  isFeatured?: string;
   page?: number;
   limit?: number;
 }
@@ -69,7 +69,7 @@ export const userService = {
     limit = 8,
   }: GetAllMedicinesParams = {}) => {
     const queryParams = new URLSearchParams();
-
+    
     if (search) queryParams.append("search", search);
     if (category) queryParams.append("category", category);
     if (typeof isFeatured === "boolean")

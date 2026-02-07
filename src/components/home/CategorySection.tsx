@@ -11,7 +11,8 @@ import {
   ArrowRight,
 } from "lucide-react";
 
-import { categories } from "@/lib/dummy-categories";
+import { userService } from "@/service/user.service";
+import type { Category } from "@/types";
 
 const iconMap: Record<string, any> = {
   "Pain Relief": Pill,
@@ -24,7 +25,13 @@ const iconMap: Record<string, any> = {
   "Vitamins": Sparkles,
 };
 
-export function CategorySection() {
+const normalizeCategories = (input: Category[]) =>
+  input.filter((category) => category.status !== "DISABLED");
+
+export async function CategorySection() {
+  const response = await userService.getCategories();
+  const categories = normalizeCategories(response?.data ?? []);
+
   return (
     <section className="py-16">
       <div className="container">
@@ -47,31 +54,37 @@ export function CategorySection() {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-          {categories.map((category) => {
-            const Icon = iconMap[category.name] ?? Pill;
+        {categories.length === 0 ? (
+          <div className="rounded-2xl border border-primary/10 bg-white/70 p-6 text-sm text-slate-500 shadow-sm">
+            Categories are being updated. Please check back soon.
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            {categories.map((category) => {
+              const Icon = iconMap[category.name] ?? Pill;
 
-            return (
-              <Link
-                key={category.id}
-                href={`/medicines?category=${category.id}`}
-                className="group rounded-xl border bg-background p-5 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
-              >
-                <div className="mb-4 inline-flex rounded-lg bg-primary/10 p-3 text-primary">
-                  <Icon className="h-5 w-5" />
-                </div>
+              return (
+                <Link
+                  key={category.id}
+                  href={`/medicines?category=${category.id}`}
+                  className="group rounded-xl border bg-background p-5 transition-all hover:-translate-y-1 hover:border-primary/40 hover:shadow-md"
+                >
+                  <div className="mb-4 inline-flex rounded-lg bg-primary/10 p-3 text-primary">
+                    <Icon className="h-5 w-5" />
+                  </div>
 
-                <h3 className="text-sm font-semibold group-hover:text-primary">
-                  {category.name}
-                </h3>
+                  <h3 className="text-sm font-semibold group-hover:text-primary">
+                    {category.name}
+                  </h3>
 
-                <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
-                  {category.description}
-                </p>
-              </Link>
-            );
-          })}
-        </div>
+                  <p className="mt-1 text-xs text-muted-foreground line-clamp-2">
+                    {category.description ?? "Essential health products"}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        )}
       </div>
     </section>
   );

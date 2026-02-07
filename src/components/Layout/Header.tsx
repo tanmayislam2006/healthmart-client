@@ -41,11 +41,17 @@ type HeaderUser = {
 };
 
 
-export function Header({ cartCount = 0 }: { cartCount?: number }) {
+export function Header({
+  cartCount = 0,
+  initialUser = null,
+}: {
+  cartCount?: number;
+  initialUser?: HeaderUser | null;
+}) {
   const router = useRouter();
 
-  const [user, setUser] = useState<HeaderUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<HeaderUser | null>(initialUser);
+  const [loading, setLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -120,6 +126,14 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
               {item.charAt(0).toUpperCase() + item.slice(1)}
             </Link>
           ))}
+          {user ? (
+            <Link
+              href={dashboardLink}
+              className="text-sm font-medium text-muted-foreground hover:text-primary"
+            >
+              Dashboard
+            </Link>
+          ) : null}
         </nav>
 
         {/* Search */}
@@ -178,13 +192,6 @@ export function Header({ cartCount = 0 }: { cartCount?: number }) {
                   <Link href={dashboardLink}>
                     <LayoutDashboard className="mr-2 h-4 w-4" />
                     Dashboard
-                  </Link>
-                </DropdownMenuItem>
-
-                <DropdownMenuItem asChild>
-                  <Link href="/orders">
-                    <Package className="mr-2 h-4 w-4" />
-                    My Orders
                   </Link>
                 </DropdownMenuItem>
 
