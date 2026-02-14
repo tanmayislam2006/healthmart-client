@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Role } from "@/constant/role";
 import { env } from "./env";
-import { cookies } from "next/headers";
 
 const AUTH_URL = env.AUTH_URL;
 
@@ -17,11 +16,9 @@ export async function proxy(req: NextRequest) {
   let session: SessionResponse | null = null;
   if (AUTH_URL) {
     try {
-      const cookieStore = await cookies();
+      const cookieHeader = req.headers.get("cookie") ?? "";
       const res = await fetch(`${AUTH_URL}/get-session`, {
-        headers: {
-          Cookie: cookieStore.toString(),
-        },
+        headers: cookieHeader ? { Cookie: cookieHeader } : {},
         cache: "no-store",
       });
 
