@@ -8,6 +8,7 @@ import {
   Package,
   Layers,
   Settings,
+  UserCircle,
 } from "lucide-react";
 
 export const adminRoutes: Route[] = [
@@ -54,6 +55,11 @@ export const adminRoutes: Route[] = [
   {
     title: "System",
     items: [
+      {
+        title: "Profile",
+        url: "/admin-dashboard/profile",
+        icon: UserCircle,
+      },
       {
         title: "Settings",
         url: "/admin-dashboard/settings",

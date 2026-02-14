@@ -6,6 +6,7 @@ import {
   Package,
   PlusCircle,
   Settings,
+  UserCircle,
 } from "lucide-react";
 
 export const sellerRoutes: Route[] = [
@@ -38,7 +39,12 @@ export const sellerRoutes: Route[] = [
     title: "Account",
     items: [
       {
-        title: "Profile Settings",
+        title: "Profile",
+        url: "/seller-dashboard/profile",
+        icon: UserCircle,
+      },
+      {
+        title: "Settings",
         url: "/seller-dashboard/settings",
         icon: Settings,
       },
