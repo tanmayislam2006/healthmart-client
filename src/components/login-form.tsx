@@ -35,7 +35,7 @@ export function LoginForm({
   const form = useForm<SignInInput>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: "hostproxy55@gmail.com",
+      email: "customer@gmail.com",
       password: "password1234",
     },
   });
@@ -97,12 +97,11 @@ export function LoginForm({
               <Field>
                 <div className="flex items-center justify-between">
                   <FieldLabel>Password</FieldLabel>
-                  <Link
-                    href="/forgot-password"
+                  <p
                     className="text-sm underline-offset-4 hover:underline"
                   >
                     Forgot password?
-                  </Link>
+                  </p>
                 </div>
 
                 <Input type="password" {...form.register("password")} />
@@ -118,13 +117,13 @@ export function LoginForm({
                   {isLoading ? "Logging in..." : "Login"}
                 </Button>
 
-                <Button
+                {/* <Button
                   type="button"
                   variant="outline"
                   onClick={handleGoogleLogin}
                 >
                   Continue with Google
-                </Button>
+                </Button> */}
 
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "}
