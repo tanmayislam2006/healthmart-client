@@ -1,6 +1,6 @@
 
 import { Route } from "@/types";
-import { LayoutDashboard, Package, User } from "lucide-react";
+import { LayoutDashboard, Package, Store, User } from "lucide-react";
 
 export const customerRoutes: Route[] =[
   {
@@ -20,6 +20,11 @@ export const customerRoutes: Route[] =[
         title: "Profile",
         url: "/dashboard/profile",
         icon: User,
+      },
+      {
+        title: "Seller Request",
+        url: "/dashboard/seller-request",
+        icon: Store,
       },
     ],
   },
