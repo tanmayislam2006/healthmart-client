@@ -8,6 +8,10 @@ type CreateReviewPayload = {
   rating: number;
   content: string;
 };
+
+type CreateSellerRequestPayload = {
+  address: string;
+};
 export const customerService = {
   safeJson: async (res: Response) => {
     const text = await res.text();
@@ -47,6 +51,29 @@ export const customerService = {
     });
     revalidatePath(`/medicines/${data.medicineId}`)
     return await res.json();
+  },
+  createSellerRequest: async (data: CreateSellerRequestPayload) => {
+    "use server";
+    const cookieStore = await cookies();
+    try {
+      const res = await fetch(`${env.BACKEND_URL}/customer/seller-request`, {
+        method: "POST",
+        headers: {
+          Cookie: cookieStore.toString(),
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+        body: JSON.stringify({ address: data.address }),
+      });
+
+      revalidatePath("/dashboard/seller-request");
+      revalidatePath("/admin-dashboard/seller-requests");
+
+      return await res.json();
+    } catch (error) {
+      console.log(error);
+      return { success: false, message: "Failed to send seller request" };
+    }
   },
   getCustomerStats: async () => {
     const cookieStore = await cookies();

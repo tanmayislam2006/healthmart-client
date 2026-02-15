@@ -131,22 +131,21 @@ export function SignupForm(props: React.ComponentProps<typeof Card>) {
                 {isLoading ? "Creating..." : "Create Account"}
               </Button>
 
-              <Button
+              {/* <Button
                 type="button"
                 variant="outline"
                 onClick={handleGoogleSignup}
               >
                 Sign up with Google
-              </Button>
+              </Button> */}
 
               <FieldDescription className="text-center">
                 Already have an account?{" "}
-                <Link
-                  href="/sign-in"
+                <p
                   className="font-medium underline underline-offset-4"
                 >
                   Sign in
-                </Link>
+                </p>
               </FieldDescription>
             </Field>
           </FieldGroup>

@@ -51,7 +51,7 @@ export function Header({
   const router = useRouter();
 
   const [user, setUser] = useState<HeaderUser | null>(initialUser);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(!initialUser);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -72,8 +72,10 @@ export function Header({
       }
     };
 
-    loadSession();
-  }, []);
+    if (!initialUser) {
+      loadSession();
+    }
+  }, [initialUser]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
